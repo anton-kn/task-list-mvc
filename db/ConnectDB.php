@@ -4,7 +4,7 @@ class ConnectDB
 {
     protected $servername = "localhost";
     protected $username = "root";
-    protected $password = "123";
+    protected $password = "";
     protected $database = "tasklist";
 
     /*

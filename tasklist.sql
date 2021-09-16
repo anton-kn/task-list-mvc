@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5deb2
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Sep 16, 2021 at 01:04 PM
--- Server version: 8.0.23-0ubuntu0.20.04.1
--- PHP Version: 7.4.3
+-- Host: 127.0.0.1:3306
+-- Generation Time: Sep 16, 2021 at 10:21 PM
+-- Server version: 5.6.51
+-- PHP Version: 7.4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -29,23 +28,25 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `tasks` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `description` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tasks`
 --
 
 INSERT INTO `tasks` (`id`, `user_id`, `description`, `created_at`, `status`) VALUES
-(18, 20, 'Изучить CSS', '2021-09-15 15:59:10', 0),
 (24, 24, 'Изучить CSS', '2021-09-15 16:11:17', 0),
 (25, 25, 'Изучить Laravel', '2021-09-15 16:12:44', 1),
 (26, 25, 'Изучить PHP', '2021-09-15 16:12:46', 1),
-(27, 25, 'Изучить MySQL', '2021-09-15 16:12:50', 1);
+(27, 25, 'Изучить MySQL', '2021-09-15 16:12:50', 1),
+(39, 20, 'Изучить HTML', '2021-09-16 19:01:27', 1),
+(40, 20, 'Изучить Laravel', '2021-09-16 19:01:29', 1),
+(42, 20, 'Изучить JavaScript', '2021-09-16 19:15:09', 0);
 
 -- --------------------------------------------------------
 
@@ -54,11 +55,11 @@ INSERT INTO `tasks` (`id`, `user_id`, `description`, `created_at`, `status`) VAL
 --
 
 CREATE TABLE `users` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `login` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
@@ -94,13 +95,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

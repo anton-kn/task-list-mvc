@@ -11,7 +11,12 @@ session_start();
 </head>
 <body>
     <div class="font-mono p-8 bg-gray-200 h-screen">
-        <?php include_once "public/" .$dditionalView.".php";?>
-    </div>
+
+
+        <!-- Сюда будет подключаться дополнительное содержание -->
+
+
+<!-- Эта чать расположена в footer.php -->
+<!--     </div>
 </body>
-</html>
+</html> -->

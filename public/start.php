@@ -1,4 +1,3 @@
-
 <div class="inline-block bg-green-100 w-4/5 py-4 px-2 rounded-lg text-2xl">
     <p class="text-center"><?php echo $content['title'];?></p>
 </div>
