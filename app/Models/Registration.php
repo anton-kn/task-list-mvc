@@ -21,7 +21,6 @@ class Registration
         $connect->closeConnect();
         return $result;
     }
-
     /*
      * Получаем данные пользователя по логину
      */
@@ -31,6 +30,16 @@ class Registration
         /* Экранируем данные */
         $paramReal = $connect->getConnect()->real_escape_string($param);
         $sql = "SELECT * FROM users WHERE login ='$paramReal'";
+//        $sql = "SELECT * FROM users WHERE login=?";
+
+//        $stm = $connect->getConnect()->prepare($sql);
+//        $stm->bind_param("s", $param);
+
+//        $stm->execute();
+//        return $stm->error_list;
+
+//        $stm->bind_result($val);
+//        $stm->fetch();
 
         $result = $connect->getConnect()->query($sql)->fetch_all()[0];
         /* записываем id */

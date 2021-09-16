@@ -32,6 +32,7 @@ if($_SERVER['REQUEST_URI'] == '/registration') {
         }
 
         $user = $reg->checkUser($data['login']);
+//        var_dump($user);
         /*Проверяем совпадение введенных пользователем данных*/
         if ($user['login'] == $data['login']) {
             if (trim($data['password']) == '') {
