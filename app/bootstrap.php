@@ -2,6 +2,9 @@
 include_once __DIR__ . "../../db/ConnectDB.php";
 
 
+$GLOBALS['connect'] = new ConnectDB();
+
+
 spl_autoload_register(function($class_name) {
 
     $servDir = $_SERVER['DOCUMENT_ROOT'];
@@ -19,7 +22,6 @@ spl_autoload_register(function($class_name) {
     }
 });
 
-
 $data = $_POST;
 
 if($_SERVER['REQUEST_URI'] == '/') {
@@ -29,9 +31,9 @@ if($_SERVER['REQUEST_URI'] == '/') {
 
 
 if($_SERVER['REQUEST_URI'] == '/registration') {
-    $reg = new RegistrationController();
+    $reg = new UserController();
     /* Проверяем пользователя */
-    $reg->identical($data['login'], $data['password']);
+    $reg->identical();
 }
 
 /* Выходим из режима создания задач */
@@ -42,9 +44,9 @@ if ($_SERVER['REQUEST_URI'] == '/signout'){
 
 if($_SERVER['REQUEST_URI'] == '/task-list'){
 
-    $task = new TaskController($_SESSION['user']);
+    $task = new TaskController($userFormSession);
     /* Управление списком задач */
-    $task->controlTask($data);
+    $task->controlTask();
 }
 
 

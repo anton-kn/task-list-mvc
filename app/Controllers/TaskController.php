@@ -3,19 +3,19 @@
 class TaskController extends Controller
 {
     private $model;
-    private $login;
+    private $userFormSession;
 
-    public function __construct($login)
+    public function __construct($userFormSession)
     {
         $this->model = new Task();
         parent::__construct();
-        $this->login = $login;
+        $this->userFormSession = $userFormSession;
     }
 
     /* Показываем все, имеющиеся задачи */
-    public function allTask()
+    private function allTask()
     {
-        $data = $this->model->showTaskAll($this->login);
+        $data = $this->model->showTaskAll($this->userFormSession);
         $this->view->showPage('task-list', [
             'title' => 'Список задач',
             'tasks' => $data
@@ -25,51 +25,52 @@ class TaskController extends Controller
     /* Отбражаем ошибку и все задачи */
     public function taskError($error)
     {
-        $data = $this->model->showTaskAll($this->login);
+        $data = $this->model->showTaskAll($this->userFormSession);
         $this->view->showPage('task-list', [
             'title' => 'Список задач',
             'tasks' => $data,
             'error' => $error
         ]);
+
     }
 
     /* Добавляем одну задачу */
-    public function addOneTask($description)
+    private function addOneTask()
     {
-        $this->model->addTask($this->login, $description);
+        $this->model->addTask($this->userFormSession, $this->dataPost['description']);
         /* Показываем все задачи */
-        self::allTask();
+        $this->allTask();
     }
 
     /* Удалим все задачи */
-    public function delAllTasks(){
+    private function delAllTasks(){
 
-        $this->model->deleteAll($this->login);
+        $this->model->deleteAll($this->userFormSession);
         $this->view->showPage('task-list', [
             'title' => 'Список задач'
         ]);
     }
 
     /* Удаляем одну задачу*/
-    public function delTaskOne($valueStatus)
+    private function delTaskOne()
     {
-        $this->model->deleteTaskOne($this->login, $valueStatus);
+        $this->model->deleteTaskOne($this->userFormSession, $this->dataPost['status']);
         /* Показываем все задачи */
-        self::allTask();
+        $this->allTask();
     }
 
     /* Записываем всем задачам - выполнено/готово */
-    public function readyAll()
+    private function readyAll()
     {
-        $this->model->statusConfirmAll($this->login);
-        self::allTask();
+        $this->model->statusConfirmAll($this->userFormSession);
+        $this->allTask();
     }
 
-    /* Записываем одной задаче - выполнено/готово */
-    public function readyOne($valueStatus)
+    /* Присваиваем одной задаче - выполнено/готово */
+    private function readyOne()
     {
-        $this->model->statusConfirmOne($this->login, $valueStatus);
-        self::allTask();
+        $this->model->statusConfirmOne($this->userFormSession, $this->dataPost['status']);
+        $this->allTask();
     }
 
 
@@ -77,52 +78,54 @@ class TaskController extends Controller
     * для подтвержения всех задач, для подтвержения одной задачи,
     * для добавления задачи
     */
-    public function controlTask($call)
+    public function controlTask()
     {
         // Для случая, если страница только перезагружается
-        if(empty($call)){
+        if(empty($this->dataPost)){
             // Сюда запишем содержание с таблицы tasks
-            self::allTask();
+            $this->allTask();
         }
 
         /*Добавляем задачу */
-        if(isset($call['add-task'])){
+        if(isset($this->dataPost['add-task'])){
             /*Добавляем статью */
-            if(empty($call['description'])){
-                self::taskError("Напишите задание");
+            if(empty($this->dataPost['description'])){
+                $this->taskError("Напишите задание");
             }else{
-                self::addOneTask($call['description']);
+                $this->addOneTask();
             }
         }
 
 
         /* Удаляем все данные с таблицы tasks */
-        if(isset($call['delete-all'])){
-            self::delAllTasks();
+        if(isset($this->dataPost['delete-all'])){
+            $this->delAllTasks();
         }
 
         // Удаляем одну задачу
-        if(isset($call['delete-task'])){
-            if (!$call['status']){
-                self::taskError("Выберите задачу для удаления");
+        if(isset($this->dataPost['delete-task'])){
+            if (!$this->dataPost['status']){
+                $this->taskError("Выберите задачу для удаления");
             }else{
-                self::delTaskOne($call['status']);
+                $this->delTaskOne();
             }
-            self::allTask();
+            $this->allTask();
         }
 
         // Статус на все задачи - все выполнено
-        if(isset($call['ready-all'])){
-            self::readyAll();
+        if(isset($this->dataPost['ready-all'])){
+            $this->readyAll();
         }
 
         // Статус на одну задачу - выполнено/не выполнено
-        if(isset($call['ready-task'])){
-            if(!$call['status']){
-                self::taskError("Выберите задачу для изменения");
+        if(isset($this->dataPost['ready-task'])){
+            if(!$this->dataPost['status']){
+                $this->taskError("Выберите задачу для изменения");
             }else{
-                self::readyOne($call['status']);
+                $this->readyOne();
             }
         }
+        $this->model->close();
     }
+
 }

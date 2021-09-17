@@ -2,14 +2,14 @@
 /*
  * Класс отвечающий за регистрацию
  */
-class RegistrationController extends Controller
+class UserController extends Controller
 {
     private $model;
 
     public function __construct()
     {
         parent::__construct();
-        $this->model = new Registration();
+        $this->model = new User();
     }
 
     public function action()
@@ -28,74 +28,72 @@ class RegistrationController extends Controller
     }
 
     /* Проверяем пользователя */
-    public function checkUser($login)
+    public function checkUser()
     {
-        return $this->model->findUser($login);
+        return $this->model->findUser($this->login);
     }
 
     /* Записываем нового пользователя */
-    public function newUser($login, $password)
+    public function newUser()
     {
-        return $this->model->insertUser($login, $password);
+        return $this->model->insertUser($this->login, $this->password);
     }
 
     // ищем одинаковых пользователей
-    public function identical($login, $password)
+    public function identical()
     {
         /* авторизация */
-        if (isset($login)) {
-
-            // $reg = new RegistrationController();
-
-            $user = self::checkUser($login);
+        if (isset($this->login)) {
+            $user = $this->checkUser($this->login);
             /*Проверяем совпадение введенных пользователем данных*/
-            if ($user['login'] == $login) {
+            if ($user['login'] == $this->login) {
 
-                if (trim($login) == '') {
-                    self::actionError("Введите login");
+                if (trim($this->login) == '') {
+                    $this->actionError("Введите login");
                 }
 
-                if (trim($password) == '') {
-                    self::actionError("Введите password");
+                if (trim($this->password) == '') {
+                    $this->actionError("Введите password");
                 }
 
-                if ( password_verify($password, $user['password']) ) {
+                if ( password_verify($this->password, $user['password']) ) {
                     /*
                      * Записываем в сессию пользователя
                      * Переходим на главную страницу
                     */
-                    $_SESSION['user'] = $login;
+                    /* Защита от XSS */
+                    $loginSpecial = htmlspecialchars($this->login, ENT_QUOTES, 'UTF-8');
+                    $_SESSION['user'] = $loginSpecial;
                     /* Перходим на начальную страницу с зарегистрированым пользователем */
                     header('Location: /task-list');
 
                 } else {
-                    self::actionError("Не правильно введен пароль");
+                    $this->actionError("Не правильно введен пароль");
                 }
             } else {
                 /* Если пользователя нет в БД
                 * регистрируем
-                 */
-                if (trim($login) == '') {
-                    self::actionError("Введите login");
+                */
+                if (trim($this->login) == '') {
+                    $this->actionError("Введите login");
                 }
 
-                if (trim($password) == '') {
-                    self::actionError("Введите password");
+                if (trim($this->password) == '') {
+                    $this->actionError("Введите password");
                 } else {
                     // хешируем пароль
-                    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-                    self::newUser($login, $passwordHash);
-                    $_SESSION['user'] = $login;
+                    $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
+                    $this->newUser($this->login, $passwordHash);
+                    /* Защита от XSS */
+                    $loginSpecial = htmlspecialchars($login, ENT_QUOTES, 'UTF-8');
+                    $_SESSION['user'] = $loginSpecial;
                      // Перходим на начальную страницу с зарегистрированым пользователем
                     header('Location: /task-list');
                 }
             }
         }else{
-                // $reg = new RegistrationController();
-                self::action();
+            $this->action();
         }
-
+        $this->model->close();
     }
-
-
 }
