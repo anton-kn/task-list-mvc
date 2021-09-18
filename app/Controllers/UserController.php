@@ -12,7 +12,7 @@ class UserController extends Controller
         $this->model = new User();
     }
 
-    public function action()
+    public function registration()
     {
         $this->view->showPage('registration', [
             'title' => 'Авторизация/Регистрация'
@@ -30,25 +30,26 @@ class UserController extends Controller
     /* Проверяем пользователя */
     public function checkUser()
     {
-        return $this->model->findUser($this->login);
+        return $this->model->findUser($this->dataPost['login']);
     }
 
     /* Записываем нового пользователя */
-    public function newUser()
+    public function newUser($password)
     {
-        return $this->model->insertUser($this->login, $this->password);
+        return $this->model->insertUser($this->dataPost['login'], $password);
     }
+
 
     // ищем одинаковых пользователей
     public function identical()
     {
         /* авторизация */
-        if (isset($this->login)) {
-            $user = $this->checkUser($this->login);
+        if (isset($this->dataPost['login'])) {
+            $user = $this->checkUser($this->dataPost['login']);
             /*Проверяем совпадение введенных пользователем данных*/
-            if ($user['login'] == $this->login) {
+            if ($user['login'] == $this->dataPost['login']) {
 
-                if (trim($this->login) == '') {
+                if (trim($this->dataPost['login']) == '') {
                     $this->actionError("Введите login");
                 }
 
@@ -62,7 +63,7 @@ class UserController extends Controller
                      * Переходим на главную страницу
                     */
                     /* Защита от XSS */
-                    $loginSpecial = htmlspecialchars($this->login, ENT_QUOTES, 'UTF-8');
+                    $loginSpecial = htmlspecialchars($this->dataPost['login'], ENT_QUOTES, 'UTF-8');
                     $_SESSION['user'] = $loginSpecial;
                     /* Перходим на начальную страницу с зарегистрированым пользователем */
                     header('Location: /task-list');
@@ -74,7 +75,7 @@ class UserController extends Controller
                 /* Если пользователя нет в БД
                 * регистрируем
                 */
-                if (trim($this->login) == '') {
+                if (trim($this->dataPost['login']) == '') {
                     $this->actionError("Введите login");
                 }
 
@@ -83,17 +84,16 @@ class UserController extends Controller
                 } else {
                     // хешируем пароль
                     $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
-                    $this->newUser($this->login, $passwordHash);
+                    $this->newUser($passwordHash);
                     /* Защита от XSS */
-                    $loginSpecial = htmlspecialchars($login, ENT_QUOTES, 'UTF-8');
+                    $loginSpecial = htmlspecialchars($this->dataPost['login'], ENT_QUOTES, 'UTF-8');
                     $_SESSION['user'] = $loginSpecial;
                      // Перходим на начальную страницу с зарегистрированым пользователем
                     header('Location: /task-list');
                 }
             }
         }else{
-            $this->action();
+            $this->registration();
         }
-        $this->model->close();
     }
 }

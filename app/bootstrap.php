@@ -1,10 +1,11 @@
 <?php
 include_once __DIR__ . "../../db/ConnectDB.php";
+include_once "Route.php";
 
-
+/* Устанавливаем соединение с БД */
 $GLOBALS['connect'] = new ConnectDB();
 
-
+/* Загружаем классы */
 spl_autoload_register(function($class_name) {
 
     $servDir = $_SERVER['DOCUMENT_ROOT'];
@@ -22,31 +23,7 @@ spl_autoload_register(function($class_name) {
     }
 });
 
-$data = $_POST;
-
-if($_SERVER['REQUEST_URI'] == '/') {
-    $start = new StartController();
-    $start->action();
-}
 
 
-if($_SERVER['REQUEST_URI'] == '/registration') {
-    $reg = new UserController();
-    /* Проверяем пользователя */
-    $reg->identical();
-}
-
-/* Выходим из режима создания задач */
-if ($_SERVER['REQUEST_URI'] == '/signout'){
-    $_SESSION = [];
-    header('Location: /');
-}
-
-if($_SERVER['REQUEST_URI'] == '/task-list'){
-
-    $task = new TaskController($userFormSession);
-    /* Управление списком задач */
-    $task->controlTask();
-}
-
+Route::start();
 

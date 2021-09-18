@@ -17,7 +17,6 @@ class Controller
         $this->login = $_POST['login'];
         $this->password = $_POST['password'];
         $this->dataPost = $_POST;
-        // $this->userFormSession = $_SESSION['user'];
     }
 
     public function action()

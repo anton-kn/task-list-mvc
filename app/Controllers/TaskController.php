@@ -13,7 +13,7 @@ class TaskController extends Controller
     }
 
     /* Показываем все, имеющиеся задачи */
-    private function allTask()
+    public function allTask()
     {
         $data = $this->model->showTaskAll($this->userFormSession);
         $this->view->showPage('task-list', [
@@ -73,19 +73,23 @@ class TaskController extends Controller
         $this->allTask();
     }
 
-
-    /* метод для удаления всех задач, для удаления одной задачи,
-    * для подтвержения всех задач, для подтвержения одной задачи,
-    * для добавления задачи
-    */
-    public function controlTask()
+    public function controlAll()
     {
-        // Для случая, если страница только перезагружается
-        if(empty($this->dataPost)){
-            // Сюда запишем содержание с таблицы tasks
-            $this->allTask();
+        /* Удаляем все данные с таблицы tasks */
+        if(isset($this->dataPost['delete-all'])){
+            $this->delAllTasks();
         }
 
+        // Статус на все задачи - все выполнено
+        if(isset($this->dataPost['ready-all'])){
+            $this->readyAll();
+        }
+        $this->allTask();
+
+    }
+
+    public function addTask()
+    {
         /*Добавляем задачу */
         if(isset($this->dataPost['add-task'])){
             /*Добавляем статью */
@@ -95,11 +99,16 @@ class TaskController extends Controller
                 $this->addOneTask();
             }
         }
+        $this->allTask();
+    }
 
 
-        /* Удаляем все данные с таблицы tasks */
-        if(isset($this->dataPost['delete-all'])){
-            $this->delAllTasks();
+    public function controlOne()
+    {
+        // Для случая, если страница только перезагружается
+        if(empty($this->dataPost)){
+            // Сюда запишем содержание с таблицы tasks
+            $this->allTask();
         }
 
         // Удаляем одну задачу
@@ -112,11 +121,6 @@ class TaskController extends Controller
             $this->allTask();
         }
 
-        // Статус на все задачи - все выполнено
-        if(isset($this->dataPost['ready-all'])){
-            $this->readyAll();
-        }
-
         // Статус на одну задачу - выполнено/не выполнено
         if(isset($this->dataPost['ready-task'])){
             if(!$this->dataPost['status']){
@@ -124,8 +128,8 @@ class TaskController extends Controller
             }else{
                 $this->readyOne();
             }
+            $this->allTask();
         }
-        $this->model->close();
     }
 
 }

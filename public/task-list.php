@@ -18,11 +18,11 @@ if (isset($userLogin)): ?>
         <p class="text-center text-red-700"><?php echo $content['error'] ?></p>
         <div class="mx-auto w-96">
             <div class="mb-10 border-b-2 border-green-600">
-                <form action="<?php $_SERVER["PHP_SELF"]?>" method="post">
+                <form action="/task-list/add-task" method="post">
                     <input class="w-60 h-10 rounded-lg" type="text" name="description" placeholder="Введите задачу">
                     <button class="my-2 p-2 bg-green-200 hover:bg-green-300 rounded-lg" name="add-task">Добавить</button>
                 </form>
-                <form action="<?php $_SERVER["PHP_SELF"]?>" method="post">
+                <form action="/task-list/control-all" method="post">
                     <button class="my-2 p-2 bg-green-200 hover:bg-green-300 rounded-lg" name="delete-all">Удалить
                         все</button>
                     <button class="my-2 p-2 bg-green-200 hover:bg-green-300 rounded-lg" name="ready-all">Отметить
@@ -36,7 +36,7 @@ if (isset($userLogin)): ?>
                     <!-- $task[4] - это содержание status  из таблицы tasks -->
                     <div class="p-4 border border-gray-900">
                         <p><?php echo $task[2] ?></p>
-                        <form action="<?php $_SERVER["PHP_SELF"]?>" method="post">
+                        <form action="/task-list/control-one" method="post">
                             <button class="my-2 p-2 bg-green-200 hover:bg-green-300 rounded-lg"
                                     name="delete-task">Удалить</button>
                             <?php if($task[4] == true): ?>

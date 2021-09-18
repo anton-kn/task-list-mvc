@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 16, 2021 at 10:21 PM
+-- Generation Time: Sep 18, 2021 at 10:30 AM
 -- Server version: 5.6.51
 -- PHP Version: 7.4.21
 
@@ -40,13 +40,14 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `user_id`, `description`, `created_at`, `status`) VALUES
-(24, 24, 'Изучить CSS', '2021-09-15 16:11:17', 0),
-(25, 25, 'Изучить Laravel', '2021-09-15 16:12:44', 1),
-(26, 25, 'Изучить PHP', '2021-09-15 16:12:46', 1),
-(27, 25, 'Изучить MySQL', '2021-09-15 16:12:50', 1),
-(39, 20, 'Изучить HTML', '2021-09-16 19:01:27', 1),
-(40, 20, 'Изучить Laravel', '2021-09-16 19:01:29', 1),
-(42, 20, 'Изучить JavaScript', '2021-09-16 19:15:09', 0);
+(86, 38, 'Изучить JavaScript', '2021-09-17 18:07:56', 0),
+(87, 38, 'Изучить Laravel', '2021-09-17 18:07:59', 0),
+(88, 38, 'Изучить MySQL', '2021-09-17 18:08:02', 0),
+(103, 0, 'Изучить JavaScript', '2021-09-18 06:12:04', 0),
+(104, 0, 'Изучить JavaScript', '2021-09-18 06:12:44', 0),
+(105, 0, 'Изучить JavaScript', '2021-09-18 06:13:10', 0),
+(109, 20, 'Изучить JavaScript', '2021-09-18 07:00:48', 0),
+(110, 20, 'Изучить Laravel', '2021-09-18 07:00:55', 0);
 
 -- --------------------------------------------------------
 
@@ -67,9 +68,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `login`, `password`, `created_at`) VALUES
 (20, 'user1', '$2y$10$1tmOXElFRcF0wyFPCndPW.64HBH4XqlUnyL2s/ZKJ7PIJ7RUnqpe6', '2021-09-15 14:17:20'),
-(24, 'user2', '$2y$10$ZVXRvwFHVBI0xjDBtJ4w7ean8gNOdJNs0R.CBrkuk.8aMv37mie8K', '2021-09-15 14:30:04'),
-(25, 'user3', '$2y$10$8WEIbGRpHmv/HQVi3o.DEe2Ou6czdvT4NDnCQqMKoENLKq6.UiK4C', '2021-09-15 15:42:37'),
-(26, 'user4', '$2y$10$zDjHtWKOAuiJjlABng78j.N0mW39gxykiFQW7DLKhV1/fWtKxsOA.', '2021-09-15 15:44:10');
+(38, 'user2', '$2y$10$ziLnaD8v29QAz689fxlpiO0f9UI5ahz/FXUdJN5wfQEs7cOdHNdqW', '2021-09-17 18:07:52'),
+(39, 'user3', '$2y$10$W2wrfOUm3DfkrbSVyp2u0O.q5o9CnrFTcsOrMohkgDyFsEnIz8w0m', '2021-09-18 05:04:40');
 
 --
 -- Indexes for dumped tables
@@ -95,13 +95,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

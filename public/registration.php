@@ -5,7 +5,7 @@
     <div class="w-50 p-2 text-center">
         <h1>Авторизация/Регистрация</h1>
         <p class="text-red-500"> <?php echo $content['error']; ?></p>
-        <form action="/registration" method="post">
+        <form action="/registration/identical" method="post">
             <input class="mx-auto m-4 p-3 rounded-lg block" type="text" name="login" placeholder="Введите login">
             <input class="mx-auto m-4 p-3 rounded-lg block" type="password" name="password"
                    placeholder="Введите пароль">
