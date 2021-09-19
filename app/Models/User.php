@@ -15,12 +15,14 @@ class User extends Model
         $loginSpecial = htmlspecialchars($login, ENT_QUOTES, 'UTF-8');
         $passwordSpecial = htmlspecialchars($password, ENT_QUOTES, 'UTF-8');
 
-        /* Экранируем данные */
-        $loginReal = $this->connectionDb->real_escape_string($loginSpecial);
-        $passwordReal = $this->connectionDb->real_escape_string($passwordSpecial);
+        $sql = "INSERT INTO users (login, password) VALUES (?, ?)";
 
-        $sql = "INSERT INTO users (login, password) VALUES ('$loginReal', '$passwordReal')";
-        $result = $this->connectionDb->query($sql);
+        $stm = $this->connectionDb->prepare($sql);
+
+        $stm->bind_param("ss", $loginSpecial, $passwordSpecial);
+
+        $result = $stm->execute();
+
         return $result;
     }
     /*
@@ -30,29 +32,21 @@ class User extends Model
     {
         /* Защита от XSS */
         $loginSpecial = htmlspecialchars($login, ENT_QUOTES, 'UTF-8');
+
         /* Экранируем данные */
-        $loginReal = $this->connectionDb->real_escape_string($loginSpecial);
+        $sql = "SELECT * FROM users WHERE login=?";
+        $stm = $this->connectionDb->prepare($sql);
+        $stm->bind_param("s", $loginSpecial);
+        $stm->execute();
+        $stm->bind_result($idResult, $loginResult, $passwordResult, $creatTimeResult);
+        $stm->fetch();
 
-        $sql = "SELECT * FROM users WHERE login ='$loginReal'";
-
-       // $sql = "SELECT * FROM users WHERE login=?";
-
-       // $stm = $connect->prepare($sql);
-       // $stm->bind_param("s", $param);
-
-       // $stm->execute();
-       // $stm->error_list;
-
-//        $stm->bind_result($val);
-//        $stm->fetch();
-
-        $result = $this->connectionDb->query($sql)->fetch_all()[0];
         /* записываем id */
-        $this->dataUser['id'] = $result[0];
+        $this->dataUser['id'] = $idResult;
         /* записываем логин */
-        $this->dataUser['login'] = $result[1];
+        $this->dataUser['login'] = $loginResult;
         /* записываем пароль */
-        $this->dataUser['password'] = $result[2];
+        $this->dataUser['password'] = $passwordResult;
         return $this->dataUser;
     }
 }

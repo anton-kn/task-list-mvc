@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         /* авторизация */
         if (isset($this->dataPost['login'])) {
-            $user = $this->checkUser($this->dataPost['login']);
+            $user = $this->checkUser();
             /*Проверяем совпадение введенных пользователем данных*/
             if ($user['login'] == $this->dataPost['login']) {
 
@@ -53,11 +53,11 @@ class UserController extends Controller
                     $this->actionError("Введите login");
                 }
 
-                if (trim($this->password) == '') {
+                if (trim($this->dataPost['password']) == '') {
                     $this->actionError("Введите password");
                 }
 
-                if ( password_verify($this->password, $user['password']) ) {
+                if ( password_verify($this->dataPost['password'], $user['password']) ) {
                     /*
                      * Записываем в сессию пользователя
                      * Переходим на главную страницу
@@ -79,11 +79,11 @@ class UserController extends Controller
                     $this->actionError("Введите login");
                 }
 
-                if (trim($this->password) == '') {
+                if (trim($this->dataPost['password']) == '') {
                     $this->actionError("Введите password");
                 } else {
                     // хешируем пароль
-                    $passwordHash = password_hash($this->password, PASSWORD_DEFAULT);
+                    $passwordHash = password_hash($this->dataPost['password'], PASSWORD_DEFAULT);
                     $this->newUser($passwordHash);
                     /* Защита от XSS */
                     $loginSpecial = htmlspecialchars($this->dataPost['login'], ENT_QUOTES, 'UTF-8');

@@ -20,7 +20,8 @@ if (isset($userLogin)): ?>
             <div class="mb-10 border-b-2 border-green-600">
                 <form action="/task-list/add-task" method="post">
                     <input class="w-60 h-10 rounded-lg" type="text" name="description" placeholder="Введите задачу">
-                    <button class="my-2 p-2 bg-green-200 hover:bg-green-300 rounded-lg" name="add-task">Добавить</button>
+                    <button class="my-2 p-2 bg-green-200 hover:bg-green-300 rounded-lg"
+                            name="add-task" value="add-task">Добавить</button>
                 </form>
                 <form action="/task-list/control-all" method="post">
                     <button class="my-2 p-2 bg-green-200 hover:bg-green-300 rounded-lg" name="delete-all">Удалить
@@ -32,6 +33,7 @@ if (isset($userLogin)): ?>
 
             <?php if(!empty($content['tasks'])): ?>
                 <?php foreach ($content['tasks'] as $task): ?>
+                    <!-- $task[0] - это содержание задачи description из таблицы tasks -->
                     <!-- $task[2] - это содержание задачи description из таблицы tasks -->
                     <!-- $task[4] - это содержание status  из таблицы tasks -->
                     <div class="p-4 border border-gray-900">

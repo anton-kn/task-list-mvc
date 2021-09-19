@@ -31,7 +31,6 @@ class TaskController extends Controller
             'tasks' => $data,
             'error' => $error
         ]);
-
     }
 
     /* Добавляем одну задачу */
@@ -85,7 +84,6 @@ class TaskController extends Controller
             $this->readyAll();
         }
         $this->allTask();
-
     }
 
     public function addTask()

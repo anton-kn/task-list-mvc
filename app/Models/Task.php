@@ -8,22 +8,21 @@ class Task extends Model
     /*  Добавляем задачу */
     public function addTask($nameLogin, $description)
     {
+        /*Статус задачи по умолчанию */
+        $status = false;
+
         $user = new User();
         /* Получаем id user */
         $userId = $user->findUser($nameLogin);
 
-        /*Статус задачи по умолчанию */
-        $status = false;
-
         /* Защита от XSS */
         $descriptionSpecial = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
-        /* Экранируем данные */
-        $descriptionReal = $this->connectionDb->real_escape_string($descriptionSpecial);
-
+        /* Защита от SQL-инъекций */
         $sql = "INSERT INTO tasks (user_id, description, status)
-                VALUES ('".(int) $userId['id']."', '".$descriptionReal."', '" . (boolean)$status."')";
-        $result = $this->connectionDb->query($sql);
-        return $result;
+                VALUES (?, ?, ?)";
+        $stm = $this->connectionDb->prepare($sql);
+        $stm->bind_param("isi", $userId['id'], $descriptionSpecial, $status);
+        $stm->execute();
     }
     /* Считываем все задачи */
     public function showTaskAll($nameLogin)
@@ -54,13 +53,16 @@ class Task extends Model
     }
 
     /* удаляем одну задачу */
-    public function deleteTaskOne($nameLogin, $valueStatus)
+    public function deleteTaskOne($nameLogin, $idStatus)
     {
         $user = new User();
         $userId = $user->findUser($nameLogin);
         $id = $userId['id'];
-        $sql = "DELETE FROM tasks WHERE user_id = $id AND id = $valueStatus";
-        return $this->connectionDb->query($sql);
+
+        $sql = "DELETE FROM tasks WHERE user_id = $id AND id = ?";
+        $stm = $this->connectionDb->prepare($sql);
+        $stm->bind_param("i", $idStatus);
+        return $stm->execute();
     }
 
     /* Подтвержаем статус для всех задач - Выполнено */
@@ -74,30 +76,38 @@ class Task extends Model
     }
 
     /* Подтвержаем статус для одной задачи - Выполнено  */
-    public function statusConfirmOne($nameLogin, $valueStatus)
+    public function statusConfirmOne($nameLogin, $idStatus)
     {
-        $var = (int) $valueStatus;
+//        $var = (int) $idStatus;
         $user = new User();
         $userId = $user->findUser($nameLogin); // запрашиваем данные пользователя
         $id = $userId['id'];                   // выбираем id, для поиска статуса о выполненной задаче
 
-        $sql_1 = "SELECT status FROM tasks WHERE id = $valueStatus";
-        $result = $this->connectionDb->query($sql_1);
+        /* Получаем значение id статуса задачи */
+        $sql_1 = "SELECT status FROM tasks WHERE id = ?";
 
-        if($result == false){
-            return $this->connectionDb->query($sql_1);
-        }else {
-            /* Получаем значение из столбца status */
-            $status = $this->connectionDb->query($sql_1)->fetch_all();
-            /* $status[0][0] - значение status из таблицы tasks */
-            if ($status[0][0] == true){
-                $sql_2 = "UPDATE tasks SET status = false WHERE user_id = $id AND id = $valueStatus";
-            }else{
-                $sql_2 = "UPDATE tasks SET status = true WHERE user_id = $id AND id = $valueStatus";
-            }
-            return $this->connectionDb->query($sql_2);
+        /* Получаем значение status - true или false */
+        $stm = $this->connectionDb->prepare($sql_1);
+        $stm->bind_param("i", $idStatus);
+        $stm->execute();
+        $stm->bind_result($statusResult);
+        $stm->fetch();
+        $stm->close();
+
+        /* Изменяем значение status */
+        if ($statusResult == true){
+            $sql_2 = 'UPDATE tasks SET status = false WHERE user_id=? AND id=?';
+        }else{
+            $sql_2 = 'UPDATE tasks SET status = true WHERE user_id=? AND id=?';
         }
-
+        $stm = $this->connectionDb->prepare($sql_2);
+//        if( !$stm ){ //если ошибка - убиваем процесс и выводим сообщение об ошибке.
+//            die( "SQL Error: {$this->connectionDb->errno} - {$this->connectionDb->error}" );
+//        }
+        $stm->bind_param('ii', $id, $idStatus);
+        $result = $stm->execute();
+        $stm->close();
+        return $result;
     }
 
 }

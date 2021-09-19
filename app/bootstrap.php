@@ -5,6 +5,7 @@ include_once "Route.php";
 /* Устанавливаем соединение с БД */
 $GLOBALS['connect'] = new ConnectDB();
 
+
 /* Загружаем классы */
 spl_autoload_register(function($class_name) {
 
@@ -23,7 +24,6 @@ spl_autoload_register(function($class_name) {
     }
 });
 
-
-
 Route::start();
+
 

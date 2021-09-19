@@ -47,13 +47,10 @@ class Route
             $task->controlAll();
         }
 
-
         if($_SERVER['REQUEST_URI'] == '/task-list/control-one'){
             $task = new TaskController($_SESSION['user']);
             /* Управление одной задачей */
             $task->controlOne();
         }
-
-
     }
 }
