@@ -4,7 +4,6 @@ class Route
 {
     public static function start()
     {
-        $route = $_SERVER['REQUEST_URI'];
 
         if($_SERVER['REQUEST_URI'] == '/') {
             $start = new StartController();

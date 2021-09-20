@@ -1,10 +1,9 @@
 <?php
-include_once __DIR__ . "../../db/ConnectDB.php";
+include_once __DIR__ . "../../db/connectDB.php";
 include_once "Route.php";
 
 /* Устанавливаем соединение с БД */
-$GLOBALS['connect'] = new ConnectDB();
-
+$db = new mysqli($connect['servername'], $connect['username'], $connect['password'], $connect['database']);
 
 /* Загружаем классы */
 spl_autoload_register(function($class_name) {

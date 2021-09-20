@@ -20,7 +20,7 @@ class Task extends Model
         /* Защита от SQL-инъекций */
         $sql = "INSERT INTO tasks (user_id, description, status)
                 VALUES (?, ?, ?)";
-        $stm = $this->connectionDb->prepare($sql);
+        $stm = $this->db()->prepare($sql);
         $stm->bind_param("isi", $userId['id'], $descriptionSpecial, $status);
         $stm->execute();
     }
@@ -33,13 +33,13 @@ class Task extends Model
         $id = $userId['id'];
 
         $sql = "SELECT * FROM tasks WHERE user_id = $id";
-        $result = $this->connectionDb->query($sql);
+        $result = $this->db()->query($sql);
 
         /* Проверяем наличие задач у пользователя, чтобы не выдавать ошибки */
         if($result == false){
-            return $this->connectionDb->query($sql);
+            return $this->db()->query($sql);
         }else {
-            return $this->connectionDb->query($sql)->fetch_all();
+            return $this->db()->query($sql)->fetch_all();
         }
     }
     /* Удаляем все данные с таблицы tasks */
@@ -49,7 +49,7 @@ class Task extends Model
         $userId = $user->findUser($nameLogin);
         $id = $userId['id'];
         $sql = "DELETE FROM tasks WHERE user_id = $id";
-        return $this->connectionDb->query($sql);
+        return $this->db()->query($sql);
     }
 
     /* удаляем одну задачу */
@@ -60,7 +60,7 @@ class Task extends Model
         $id = $userId['id'];
 
         $sql = "DELETE FROM tasks WHERE user_id = $id AND id = ?";
-        $stm = $this->connectionDb->prepare($sql);
+        $stm = $this->db()->prepare($sql);
         $stm->bind_param("i", $idStatus);
         return $stm->execute();
     }
@@ -72,7 +72,7 @@ class Task extends Model
         $userId = $user->findUser($nameLogin);
         $id = $userId['id'];
         $sql = "UPDATE tasks SET status = true WHERE user_id = $id";
-        return $this->connectionDb->query($sql);
+        return $this->db()->query($sql);
     }
 
     /* Подтвержаем статус для одной задачи - Выполнено  */
@@ -87,7 +87,7 @@ class Task extends Model
         $sql_1 = "SELECT status FROM tasks WHERE id = ?";
 
         /* Получаем значение status - true или false */
-        $stm = $this->connectionDb->prepare($sql_1);
+        $stm = $this->db()->prepare($sql_1);
         $stm->bind_param("i", $idStatus);
         $stm->execute();
         $stm->bind_result($statusResult);
@@ -100,9 +100,9 @@ class Task extends Model
         }else{
             $sql_2 = 'UPDATE tasks SET status = true WHERE user_id=? AND id=?';
         }
-        $stm = $this->connectionDb->prepare($sql_2);
+        $stm = $this->db()->prepare($sql_2);
 //        if( !$stm ){ //если ошибка - убиваем процесс и выводим сообщение об ошибке.
-//            die( "SQL Error: {$this->connectionDb->errno} - {$this->connectionDb->error}" );
+//            die( "SQL Error: {$this->db()->errno} - {$this->db()->error}" );
 //        }
         $stm->bind_param('ii', $id, $idStatus);
         $result = $stm->execute();

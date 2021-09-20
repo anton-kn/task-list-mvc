@@ -11,13 +11,14 @@ class User extends Model
      */
     public function insertUser($login, $password)
     {
+        global $db;
         /* Защита от XSS */
         $loginSpecial = htmlspecialchars($login, ENT_QUOTES, 'UTF-8');
         $passwordSpecial = htmlspecialchars($password, ENT_QUOTES, 'UTF-8');
 
         $sql = "INSERT INTO users (login, password) VALUES (?, ?)";
 
-        $stm = $this->connectionDb->prepare($sql);
+        $stm = $this->db()->prepare($sql);
 
         $stm->bind_param("ss", $loginSpecial, $passwordSpecial);
 
@@ -35,7 +36,7 @@ class User extends Model
 
         /* Экранируем данные */
         $sql = "SELECT * FROM users WHERE login=?";
-        $stm = $this->connectionDb->prepare($sql);
+        $stm = $this->db()->prepare($sql);
         $stm->bind_param("s", $loginSpecial);
         $stm->execute();
         $stm->bind_result($idResult, $loginResult, $passwordResult, $creatTimeResult);
